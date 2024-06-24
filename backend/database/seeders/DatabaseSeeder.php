@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Desenvolvedor;
+use App\Models\Nivel;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,11 +13,40 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        Nivel::factory()->create([
+            'nivel' => "Programador Junior",
+        ]);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        Nivel::factory()->create([
+            'nivel' => "Programador Pleno",
+        ]);
+
+        Nivel::factory()->create([
+            'nivel' => "Programador Senior",
+        ]);
+
+        Desenvolvedor::factory()->create([
+            'nivel_id' => "1",
+            'nome' => "Enzo",
+            'sexo' => "Não binário",
+            'data_nascimento' => date('22-10-2006'),
+            'hobby' => "League of Legends"
+        ]);
+
+        Desenvolvedor::factory()->create([
+            'nivel_id' => "2",
+            'nome' => "João Vitor",
+            'sexo' => "Masculino",
+            'data_nascimento' => date('27-09-2000'),
+            'hobby' => "Programação, Filmes, Séries, Jogos e Livros"
+        ]);
+
+        Desenvolvedor::factory()->create([
+            'nivel_id' => "3",
+            'nome' => "Stephan Rafael",
+            'sexo' => "Masculino",
+            'data_nascimento' => date('27-09-1996'),
+            'hobby' => "Hackear a Nasa"
         ]);
     }
 }
