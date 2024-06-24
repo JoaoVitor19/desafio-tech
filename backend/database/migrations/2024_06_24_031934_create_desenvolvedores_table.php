@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('nivel_id')->constrained('niveis');
             $table->string('nome');
-            $table->char('sexo', 1);
+            $table->char('sexo');
             $table->date('data_nascimento');
             $table->string('hobby')->nullable();
             $table->timestamps();
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('desenvolvedors');
+        Schema::dropIfExists('desenvolvedores');
     }
 };
