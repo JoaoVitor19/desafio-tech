@@ -11,10 +11,14 @@ use Illuminate\Support\Facades\Validator;
 
 class NivelController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $niveis = Nivel::all();
-        return response()->json(new NivelCollection($niveis));
+        $perPage = $request->query('per_page', 10);
+        $page = $request->query('page', 1);
+
+        $nivel = Nivel::paginate($perPage, ['*'], 'page', $page);
+
+        return response()->json(new NivelCollection($nivel));
     }
 
     public function show($id)

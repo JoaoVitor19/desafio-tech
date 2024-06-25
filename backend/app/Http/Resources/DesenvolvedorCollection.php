@@ -16,6 +16,12 @@ class DesenvolvedorCollection extends ResourceCollection
     {
         return [
             'data' => DesenvolvedorResource::collection($this->collection),
+            'meta' => [
+                'total' => $this->total(),
+                'per_page' => $this->perPage(),
+                'current_page' => $this->currentPage(),
+                'last_page' => $this->lastPage(),
+            ],
         ];
     }
 }

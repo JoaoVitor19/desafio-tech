@@ -11,9 +11,13 @@ use Illuminate\Support\Facades\Validator;
 
 class DesenvolvedorController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $desenvolvedores = Desenvolvedor::all();
+        $perPage = $request->query('per_page', 10);
+        $page = $request->query('page', 1);
+
+        $desenvolvedores = Desenvolvedor::paginate($perPage, ['*'], 'page', $page);
+
         return response()->json(new DesenvolvedorCollection($desenvolvedores));
     }
 
@@ -41,7 +45,7 @@ class DesenvolvedorController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
-        
+
         $desenvolvedor = Desenvolvedor::create($request->all());
         return response()->json(new DesenvolvedorResource($desenvolvedor), 201);
     }
@@ -59,7 +63,7 @@ class DesenvolvedorController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
-        
+
         $desenvolvedor = Desenvolvedor::find($id);
 
         if ($desenvolvedor == null) {
