@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('desenvolvedores', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('nivel_id')->constrained('niveis');
+            $table->foreignId('nivel_id')->constrained('niveis')->onDelete('cascade');
             $table->string('nome');
-            $table->char('sexo');
+            $table->string('sexo');
             $table->date('data_nascimento');
             $table->string('hobby')->nullable();
             $table->timestamps();

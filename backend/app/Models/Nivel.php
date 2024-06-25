@@ -15,7 +15,6 @@ class Nivel extends Model
         'nivel',
     ];
 
-    // Relacionamento com o model Desenvolvedor
     public function desenvolvedores()
     {
         return $this->hasMany(Desenvolvedor::class);
