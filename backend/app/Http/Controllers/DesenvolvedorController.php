@@ -15,8 +15,14 @@ class DesenvolvedorController extends Controller
     {
         $perPage = $request->query('per_page', 10);
         $page = $request->query('page', 1);
+        $search = $request->query('search', '');
 
-        $desenvolvedores = Desenvolvedor::paginate($perPage, ['*'], 'page', $page);
+        if (!empty($search)) {
+            $desenvolvedores = Desenvolvedor::whereRaw('LOWER(nome) like ?', ['%' . strtolower($search) . '%'])
+                ->paginate($perPage, ['*'], 'page', $page);
+        } else {
+            $desenvolvedores = Desenvolvedor::paginate($perPage, ['*'], 'page', $page);
+        }
 
         return response()->json(new DesenvolvedorCollection($desenvolvedores));
     }

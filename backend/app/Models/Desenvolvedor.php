@@ -20,7 +20,7 @@ class Desenvolvedor extends Model
         'hobby'
     ];
 
-    public function niveis()
+    public function nivel()
     {
         return $this->belongsTo(Nivel::class);
     }
