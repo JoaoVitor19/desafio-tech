@@ -1,12 +1,13 @@
 import React from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 
-const ListarNiveisModal = ({ show, onHide, editId, nivel, onSave, setNivel }) => {
+const NivelModalForm = ({ show, onHide, editId, nivel, onSave, setNivel }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
     onSave(editId);
   };
+
 
   return (
     <Modal show={show} onHide={onHide}>
@@ -21,7 +22,7 @@ const ListarNiveisModal = ({ show, onHide, editId, nivel, onSave, setNivel }) =>
           </Form.Group>
           <div className='text-center'>
             <Button variant="primary" type="submit">
-              {editId ? 'Editar' : 'Adicionar'}
+              {editId ? 'Salvar' : 'Adicionar'}
             </Button>
           </div>
         </Form>
@@ -30,4 +31,4 @@ const ListarNiveisModal = ({ show, onHide, editId, nivel, onSave, setNivel }) =>
   );
 };
 
-export default ListarNiveisModal;
+export default NivelModalForm;
