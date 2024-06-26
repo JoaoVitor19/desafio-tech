@@ -40,16 +40,32 @@ class DesenvolvedorController extends Controller
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $rules = [
             'nivel_id' => 'required|exists:niveis,id',
             'nome' => 'required|string|max:255',
-            'sexo' => 'required|in:M,F',
+            'sexo' => 'required',
             'data_nascimento' => 'required|date_format:Y-m-d',
             'hobby' => 'required|string|max:255',
-        ]);
+        ];
+
+        $messages = [
+            'nivel_id.required' => 'O campo nível é obrigatório.',
+            'nivel_id.exists' => 'O nível selecionado não existe.',
+            'nome.required' => 'O campo nome é obrigatório.',
+            'nome.string' => 'O campo nome deve ser uma string.',
+            'nome.max' => 'O campo nome não pode ter mais que 255 caracteres.',
+            'sexo.required' => 'O campo sexo é obrigatório.',
+            'data_nascimento.required' => 'O campo data de nascimento é obrigatório.',
+            'data_nascimento.date_format' => 'O campo data de nascimento deve estar no formato Y-m-d.',
+            'hobby.required' => 'O campo hobby é obrigatório.',
+            'hobby.string' => 'O campo hobby deve ser uma string.',
+            'hobby.max' => 'O campo hobby não pode ter mais que 255 caracteres.',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
+            return response()->json(['mensagem' => array_values($validator->errors()->all())], 400);
         }
 
         $desenvolvedor = Desenvolvedor::create($request->all());
@@ -58,16 +74,32 @@ class DesenvolvedorController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
+        $rules = [
             'nivel_id' => 'required|exists:niveis,id',
             'nome' => 'required|string|max:255',
-            'sexo' => 'required|in:M,F',
+            'sexo' => 'required',
             'data_nascimento' => 'required|date_format:Y-m-d',
             'hobby' => 'required|string|max:255',
-        ]);
+        ];
+
+        $messages = [
+            'nivel_id.required' => 'O campo nível é obrigatório.',
+            'nivel_id.exists' => 'O nível selecionado não existe.',
+            'nome.required' => 'O campo nome é obrigatório.',
+            'nome.string' => 'O campo nome deve ser uma string.',
+            'nome.max' => 'O campo nome não pode ter mais que 255 caracteres.',
+            'sexo.required' => 'O campo sexo é obrigatório.',
+            'data_nascimento.required' => 'O campo data de nascimento é obrigatório.',
+            'data_nascimento.date_format' => 'O campo data de nascimento deve estar no formato Y-m-d.',
+            'hobby.required' => 'O campo hobby é obrigatório.',
+            'hobby.string' => 'O campo hobby deve ser uma string.',
+            'hobby.max' => 'O campo hobby não pode ter mais que 255 caracteres.',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
+            return response()->json(['mensagem' => array_values($validator->errors()->all())], 400);
         }
 
         $desenvolvedor = Desenvolvedor::find($id);

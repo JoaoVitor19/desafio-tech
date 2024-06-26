@@ -19,9 +19,10 @@ class NivelController extends Controller
 
         if (!empty($search)) {
             $niveis = Nivel::whereRaw('LOWER(nivel) like ?', ['%' . strtolower($search) . '%'])
+                ->withCount('desenvolvedores')
                 ->paginate($perPage, ['*'], 'page', $page);
         } else {
-            $niveis = Nivel::paginate($perPage, ['*'], 'page', $page);
+            $niveis = Nivel::withCount('desenvolvedores')->paginate($perPage, ['*'], 'page', $page);
         }
 
         return response()->json(new NivelCollection($niveis));
@@ -32,7 +33,7 @@ class NivelController extends Controller
         $nivel = Nivel::find($id);
 
         if ($nivel == null) {
-            return response()->json(null, 404);
+            return response()->json(['mensagem' => "Nivel não encontrado"], 404);
         }
 
         return response()->json(new NivelResource($nivel));
@@ -40,12 +41,20 @@ class NivelController extends Controller
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $rules = [
             'nivel' => 'required|string|max:255',
-        ]);
+        ];
+
+        $messages = [
+            'nivel.required' => 'O campo nivel é obrigatório.',
+            'nivel.string' => 'O campo nivel deve ser uma string.',
+            'nivel.max' => 'O campo nivel não pode ter mais que 255 caracteres.',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
+            return response()->json(['mensagem' => array_values($validator->errors()->all())], 400);
         }
 
         $nivel = Nivel::create($request->all());
@@ -55,18 +64,26 @@ class NivelController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
+        $rules = [
             'nivel' => 'required|string|max:255',
-        ]);
+        ];
+
+        $messages = [
+            'nivel.required' => 'O campo nivel é obrigatório.',
+            'nivel.string' => 'O campo nivel deve ser uma string.',
+            'nivel.max' => 'O campo nivel não pode ter mais que 255 caracteres.',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
+            return response()->json(['mensagem' => array_values($validator->errors()->all())], 400);
         }
 
         $nivel = Nivel::find($id);
 
         if ($nivel == null) {
-            return response()->json(null, 404);
+            return response()->json(['mensagem' => "Nivel não encontrado"], 404);
         }
 
         $nivel->update($request->all());
@@ -78,14 +95,13 @@ class NivelController extends Controller
         $nivel = Nivel::find($id);
 
         if ($nivel == null) {
-            return response()->json(null, 404);
+            return response()->json(['mensagem' => "Nivel não encontrado"], 404);
         }
 
 
         if ($nivel->desenvolvedores()->exists()) {
             return response()->json([
-                'success' => false,
-                'message' => 'Não é possível remover o nível porque há desenvolvedores associados a ele.'
+                'mensagem' => 'Não é possível remover o nível porque há desenvolvedores associados a ele!'
             ], 400);
         }
 
