@@ -1,13 +1,17 @@
 import React from 'react';
-import { Table, Button } from 'react-bootstrap';
+import { Table, Button, Pagination } from 'react-bootstrap';
 
 interface DesenvolvedoresTableProps {
+    niveis,
+    currentPage,
+    totalPages,
     desenvolvedores: any[];
     onEdit: (id: any, desenvolvedor: any) => void;
     onDelete: (id: any) => void;
+    handlePageChange: (pageNumber: number) => void;
 }
 
-const DesenvolvedoresTable: React.FC<DesenvolvedoresTableProps> = ({ desenvolvedores, onEdit, onDelete }) => {
+const DesenvolvedoresTable: React.FC<DesenvolvedoresTableProps> = ({ niveis, currentPage, totalPages, desenvolvedores, onEdit, onDelete,handlePageChange }) => {
     return (
         <Table striped bordered hover style={{ minWidth: "60vw" }} className='text-center'>
             <thead>
@@ -35,6 +39,21 @@ const DesenvolvedoresTable: React.FC<DesenvolvedoresTableProps> = ({ desenvolved
                     </tr>
                 ))}
             </tbody>
+            <tfoot>
+                <tr>
+                    <td colSpan={3}>
+                        <div className='d-flex justify-content-center'>
+                            <Pagination style={{ margin: 0 }}>
+                                {Array.from({ length: totalPages }, (_, i) => (
+                                    <Pagination.Item key={i + 1} active={i + 1 === currentPage} onClick={() => handlePageChange(i + 1)}>
+                                        {i + 1}
+                                    </Pagination.Item>
+                                ))}
+                            </Pagination>
+                        </div>
+                    </td>
+                </tr>
+            </tfoot>
         </Table>
     );
 };

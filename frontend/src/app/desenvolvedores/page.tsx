@@ -7,6 +7,7 @@ import ToastMessage from '../components/ToastMessage';
 import DesenvolvedorModalForm from '../components/DesenvolvedorModalForm';
 import DesenvolvedoresTable from '../components/DesenvolvedoresTable';
 import SearchInput from '../components/SearchInput';
+import ConfirmationModal from '../components/ConfirmationModal';
 
 const Desenvolvedores: React.FC = () => {
 
@@ -35,9 +36,12 @@ const Desenvolvedores: React.FC = () => {
 
   const [searchQuery, setSearchQuery] = useState('');
 
+  const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
+  const [desenvolvedorToDelete, setDesenvolvedorToDelete] = useState<number | null>(null);
+
   useEffect(() => {
-    fetchDesenvolvedores(currentPage, searchQuery);
-  }, [currentPage, searchQuery]);
+    fetchDesenvolvedores(currentPage);
+  }, [currentPage]);
 
   useEffect(() => {
     fetchNiveis();
@@ -174,6 +178,19 @@ const Desenvolvedores: React.FC = () => {
     });
   };
 
+  const handleDelete = (id: number) => {
+    setDesenvolvedorToDelete(id);
+    setShowConfirmModal(true);
+  };
+
+  const confirmDelete = () => {
+    if (desenvolvedorToDelete !== null) {
+      deleteDesenvolvedor(desenvolvedorToDelete);
+    }
+    setShowConfirmModal(false);
+    setDesenvolvedorToDelete(null);
+  };
+
   const handleCloseToast = () => {
     setToast({ show: false, variant: '', message: '' });
   };
@@ -203,44 +220,39 @@ const Desenvolvedores: React.FC = () => {
         </Button>
       </div>
 
-      <div>
-        <DesenvolvedoresTable
-          desenvolvedores={desenvolvedores}
-          onEdit={handleOpenModal}
-          onDelete={deleteDesenvolvedor}
-        />
+      <DesenvolvedoresTable
+        niveis={niveis}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        desenvolvedores={desenvolvedores}
+        onEdit={handleOpenModal}
+        onDelete={handleDelete}
+        handlePageChange={handlePageChange}
+      />
 
-        <div className='d-flex justify-content-center'>
-          <Pagination style={{ margin: 0 }}>
-            {Array.from({ length: totalPages }, (_, i) => (
-              <Pagination.Item
-                key={i + 1}
-                active={i + 1 === currentPage}
-                onClick={() => handlePageChange(i + 1)}
-              >
-                {i + 1}
-              </Pagination.Item>
-            ))}
-          </Pagination>
-        </div>
+      <ToastMessage
+        show={toast.show}
+        onClose={handleCloseToast}
+        variant={toast.variant}
+        message={toast.message}
+      />
 
-        <ToastMessage
-          show={toast.show}
-          onClose={handleCloseToast}
-          variant={toast.variant}
-          message={toast.message}
-        />
+      <DesenvolvedorModalForm
+        show={showModal}
+        onHide={handleCloseModal}
+        editId={desenvolvedorId}
+        desenvolvedor={desenvolvedor}
+        onSave={desenvolvedorId ? editDesenvolvedor : addDesenvolvedor}
+        setDesenvolvedor={setDesenvolvedor}
+        niveis={niveis}
+      />
 
-        <DesenvolvedorModalForm
-          show={showModal}
-          onHide={handleCloseModal}
-          editId={desenvolvedorId}
-          desenvolvedor={desenvolvedor}
-          onSave={desenvolvedorId ? editDesenvolvedor : addDesenvolvedor}
-          setDesenvolvedor={setDesenvolvedor}
-          niveis={niveis}
-        />
-      </div>
+      <ConfirmationModal
+        show={showConfirmModal}
+        onHide={() => setShowConfirmModal(false)}
+        onConfirm={confirmDelete}
+        message="Você tem certeza que deseja deletar este Desenvolvedor?"
+      />
     </div>
   );
 };

@@ -3,11 +3,13 @@
 import Link from 'next/link';
 
 import { useEffect, useState } from 'react';
-import { Button, Form, InputGroup, Pagination, Table } from 'react-bootstrap';
+import { Button, Pagination, Table } from 'react-bootstrap';
 
 import ToastMessage from '../components/ToastMessage';
 import NivelModalForm from '../components/NivelModalForm';
 import SearchInput from '../components/SearchInput';
+import NiveisTable from '../components/NiveisTable';
+import ConfirmationModal from '../components/ConfirmationModal';
 
 export default function Niveis() {
 
@@ -27,9 +29,12 @@ export default function Niveis() {
 
   const [searchQuery, setSearchQuery] = useState('');
 
+  const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
+  const [nivelToDelete, setNivelToDelete] = useState<number | null>(null);
+
   useEffect(() => {
-    fetchNiveis(currentPage, searchQuery);
-  }, [currentPage, searchQuery]);
+    fetchNiveis(currentPage);
+  }, [currentPage]);
 
 
   const fetchNiveis = async (currentPage = 1, searchQuery = '') => {
@@ -69,7 +74,7 @@ export default function Niveis() {
       setToast({ show: true, variant: 'success', message: 'Nível adicionado com sucesso' });
 
     } catch (error: any) {
-      setToast({ show: true, variant: 'danger', message: error.error?.nivel ?? 'Erro ao adicionar nível' });
+      setToast({ show: true, variant: 'danger', message: error.mensagem ?? 'Erro ao adicionar nível' });
     }
   };
 
@@ -114,7 +119,7 @@ export default function Niveis() {
       }
 
       if (response.status == 404) {
-        throw { message: "Nivel não encontrado" };
+        throw { message: "Nível não encontrado" };
       }
 
       fetchNiveis(currentPage);
@@ -122,6 +127,19 @@ export default function Niveis() {
     } catch (error: any) {
       setToast({ show: true, variant: 'danger', message: error.message ?? 'Erro ao deletar nível' });
     }
+  };
+
+  const handleDelete = (id: number) => {
+    setNivelToDelete(id);
+    setShowConfirmModal(true);
+  };
+
+  const confirmDelete = () => {
+    if (nivelToDelete !== null) {
+      deleteNivel(nivelToDelete);
+    }
+    setShowConfirmModal(false);
+    setNivelToDelete(null);
   };
 
   const handleOpenModal = (id: any, nome: any) => {
@@ -144,13 +162,8 @@ export default function Niveis() {
     setCurrentPage(pageNumber);
   };
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    fetchNiveis(1, searchQuery);
-  };
-
   return (
-    <div className="d-flex w-100 justify-content-center flex-column align-items-center" style={{height: "100vh", gap: "10px"}}>
+    <div className="d-flex w-100 justify-content-center flex-column align-items-center" style={{ height: "100vh", gap: "10px" }}>
 
       <h1 className="mt-2 mb-2">Página de Níveis</h1>
 
@@ -161,56 +174,33 @@ export default function Niveis() {
       <div className='d-flex justify-content-between' style={{ gap: "20px", minWidth: "50vw" }}>
         <SearchInput
           value={searchQuery}
+          placeholder='Buscar Niveis'
           onChange={setSearchQuery}
           onSubmit={() => fetchNiveis(1, searchQuery)}
         />
         <Button variant="primary" className="mb-3" onClick={() => setShowModal(true)}>Adicionar Nível</Button>
       </div>
 
-
       <div>
-
-        <Table striped bordered hover style={{ minWidth: "50vw" }} className='text-center'>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nível</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {niveis.map((nivel: any) => (
-              <tr key={nivel.id}>
-                <td style={{ width: "100px" }}>{nivel.id}</td>
-                <td >{nivel.nivel}</td>
-                <td style={{ width: "200px" }}>
-                  <Button variant="info" onClick={() => handleOpenModal(nivel.id, nivel.nivel)}>Editar</Button>
-                  <Button variant="danger" onClick={() => deleteNivel(nivel.id)}>Deletar</Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-          <tfoot>
-            <tr>
-              <td colSpan={3}>
-                <div className='d-flex justify-content-center'>
-                  <Pagination style={{ margin: 0 }}>
-                    {Array.from({ length: totalPages }, (_, i) => (
-                      <Pagination.Item key={i + 1} active={i + 1 === currentPage} onClick={() => handlePageChange(i + 1)}>
-                        {i + 1}
-                      </Pagination.Item>
-                    ))}
-                  </Pagination>
-                </div>
-              </td>
-            </tr>
-          </tfoot>
-        </Table>
-
-        <ToastMessage show={toast.show} onClose={handleCloseToast} variant={toast.variant} message={toast.message} />
-        <NivelModalForm show={showModal} onHide={handleCloseModal} editId={nivelId} nivel={nivel} onSave={nivelId ? editNivel : addNivel} setNivel={setNivel} />
-
+        <NiveisTable
+          niveis={niveis}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          handleOpenModal={handleOpenModal}
+          deleteNivel={handleDelete}
+          handlePageChange={handlePageChange}
+        />
       </div>
+
+      <ToastMessage show={toast.show} onClose={handleCloseToast} variant={toast.variant} message={toast.message} />
+      <NivelModalForm show={showModal} onHide={handleCloseModal} editId={nivelId} nivel={nivel} onSave={nivelId ? editNivel : addNivel} setNivel={setNivel} />
+      
+      <ConfirmationModal
+        show={showConfirmModal}
+        onHide={() => setShowConfirmModal(false)}
+        onConfirm={confirmDelete}
+        message="Você tem certeza que deseja deletar este nível?"
+      />
 
     </div>
   );
