@@ -15,10 +15,16 @@ class NivelController extends Controller
     {
         $perPage = $request->query('per_page', 10);
         $page = $request->query('page', 1);
+        $search = $request->query('search', '');
 
-        $nivel = Nivel::paginate($perPage, ['*'], 'page', $page);
+        if (!empty($search)) {
+            $niveis = Nivel::whereRaw('LOWER(nivel) like ?', ['%' . strtolower($search) . '%'])
+                ->paginate($perPage, ['*'], 'page', $page);
+        } else {
+            $niveis = Nivel::paginate($perPage, ['*'], 'page', $page);
+        }
 
-        return response()->json(new NivelCollection($nivel));
+        return response()->json(new NivelCollection($niveis));
     }
 
     public function show($id)
@@ -41,7 +47,7 @@ class NivelController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
-        
+
         $nivel = Nivel::create($request->all());
 
         return response()->json(new NivelResource($nivel), 201);
@@ -56,7 +62,7 @@ class NivelController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
-        
+
         $nivel = Nivel::find($id);
 
         if ($nivel == null) {
