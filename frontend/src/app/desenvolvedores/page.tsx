@@ -11,8 +11,9 @@ import ConfirmationModal from '../components/ConfirmationModal';
 
 const Desenvolvedores: React.FC = () => {
 
-  const apiUrl = "https://backend.test/desenvolvedores";
-  const apiUrlNiveis = "https://backend.test/niveis";
+  const envUrl = process.env.API_URL;
+  const apiUrl = `${envUrl}/desenvolvedores`;
+  const apiUrlNiveis = `${envUrl}/niveis`;
 
   const [desenvolvedor, setDesenvolvedor] = useState({
     nivel_id: '',
@@ -47,7 +48,7 @@ const Desenvolvedores: React.FC = () => {
     fetchNiveis();
   }, []);
 
-  const fetchNiveis =  async () => {
+  const fetchNiveis = async () => {
     try {
       await fetch(`${apiUrlNiveis}?per_page=999`)
         .then(response => response.json())

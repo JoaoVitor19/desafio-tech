@@ -13,7 +13,8 @@ import ConfirmationModal from '../components/ConfirmationModal';
 
 export default function Niveis() {
 
-  const apiUrl = "https://backend.test/niveis";
+  const envUrl = process.env.API_URL;
+  const apiUrl = `${envUrl}/niveis`;
 
   const [nivel, setNivel] = useState('');
   const [niveis, setNiveis] = useState([]);
