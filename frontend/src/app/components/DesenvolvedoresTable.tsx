@@ -1,23 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Table, Button, Pagination } from 'react-bootstrap';
 
 interface DesenvolvedoresTableProps {
-    niveis,
-    currentPage,
-    totalPages,
+    currentPage: number,
+    totalPages: number,
     desenvolvedores: any[];
     onEdit: (id: any, desenvolvedor: any) => void;
     onDelete: (id: any) => void;
     handlePageChange: (pageNumber: number) => void;
 }
 
-const DesenvolvedoresTable: React.FC<DesenvolvedoresTableProps> = ({ niveis, currentPage, totalPages, desenvolvedores, onEdit, onDelete,handlePageChange }) => {
+const DesenvolvedoresTable: React.FC<DesenvolvedoresTableProps> = ({ currentPage, totalPages, desenvolvedores, onEdit, onDelete, handlePageChange }) => {
+
+    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+    const [sortedDesenvolvedores, setSortedDesenvolvedores] = useState(desenvolvedores);
+
+    const handleSort = () => {
+        const sortedDesenvolvedores = [...desenvolvedores].sort((a, b) => {
+            if (sortOrder === 'asc') {
+                return a.nome.localeCompare(b.nome);
+            } else {
+                return b.nome.localeCompare(a.nome);
+            }
+        });
+        setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+        setSortedDesenvolvedores(sortedDesenvolvedores);
+    };
+
     return (
         <Table striped bordered hover style={{ minWidth: "60vw" }} className='text-center'>
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Nome</th>
+                    <th onClick={handleSort} style={{ cursor: 'pointer' }}>Nome - {sortOrder}</th>
                     <th>Sexo</th>
                     <th>Data de Nascimento</th>
                     <th>Hobby</th>
@@ -25,7 +40,7 @@ const DesenvolvedoresTable: React.FC<DesenvolvedoresTableProps> = ({ niveis, cur
                 </tr>
             </thead>
             <tbody>
-                {desenvolvedores.map((desenvolvedor: any) => (
+                {sortedDesenvolvedores.map((desenvolvedor: any) => (
                     <tr key={desenvolvedor.id}>
                         <td>{desenvolvedor.id}</td>
                         <td>{desenvolvedor.nome}</td>
@@ -41,7 +56,7 @@ const DesenvolvedoresTable: React.FC<DesenvolvedoresTableProps> = ({ niveis, cur
             </tbody>
             <tfoot>
                 <tr>
-                    <td colSpan={3}>
+                    <td colSpan={6}>
                         <div className='d-flex justify-content-center'>
                             <Pagination style={{ margin: 0 }}>
                                 {Array.from({ length: totalPages }, (_, i) => (

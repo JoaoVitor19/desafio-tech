@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Button, Pagination } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import ToastMessage from '../components/ToastMessage';
 import DesenvolvedorModalForm from '../components/DesenvolvedorModalForm';
 import DesenvolvedoresTable from '../components/DesenvolvedoresTable';
@@ -220,15 +220,16 @@ const Desenvolvedores: React.FC = () => {
         </Button>
       </div>
 
-      <DesenvolvedoresTable
-        niveis={niveis}
-        currentPage={currentPage}
-        totalPages={totalPages}
-        desenvolvedores={desenvolvedores}
-        onEdit={handleOpenModal}
-        onDelete={handleDelete}
-        handlePageChange={handlePageChange}
-      />
+      <div>
+        <DesenvolvedoresTable
+          currentPage={currentPage}
+          totalPages={totalPages}
+          desenvolvedores={desenvolvedores}
+          onEdit={handleOpenModal}
+          onDelete={handleDelete}
+          handlePageChange={handlePageChange}
+        />
+      </div>
 
       <ToastMessage
         show={toast.show}
