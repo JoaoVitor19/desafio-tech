@@ -18,32 +18,18 @@ const NiveisTable: React.FC<NiveisTableProps> = ({
     deleteNivel,
     handlePageChange,
 }) => {
-    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
-    const [sortedNiveis, setSortedNiveis] = useState(niveis);
-
-    const handleSort = () => {
-        const sortedNiveis = [...niveis].sort((a, b) => {
-            if (sortOrder === 'asc') {
-                return a.nivel.localeCompare(b.nivel);
-            } else {
-                return b.nivel.localeCompare(a.nivel);
-            }
-        });
-        setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-        setSortedNiveis(sortedNiveis);
-    };
 
     return (
         <Table striped bordered hover style={{ minWidth: "50vw" }} className='text-center'>
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th onClick={handleSort} style={{ cursor: 'pointer' }}>Nível - {sortOrder}</th>
+                    <th >Nível</th>
                     <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
-                {sortedNiveis.map((nivel) => (
+                {niveis.map((nivel) => (
                     <tr key={nivel.id}>
                         <td style={{ width: '100px' }}>{nivel.id}</td>
                         <td>{nivel.nivel}</td>
@@ -57,16 +43,6 @@ const NiveisTable: React.FC<NiveisTableProps> = ({
                         </td>
                     </tr>
                 ))}
-                {/* {niveis.map((nivel: any) => (
-                    <tr key={nivel.id}>
-                        <td style={{ width: "100px" }}>{nivel.id}</td>
-                        <td>{nivel.nivel}</td>
-                        <td style={{ width: "200px" }}>
-                            <Button variant="info" onClick={() => handleOpenModal(nivel.id, nivel.nivel)}>Editar</Button>
-                            <Button variant="danger" onClick={() => deleteNivel(nivel.id)}>Deletar</Button>
-                        </td>
-                    </tr>
-                ))} */}
             </tbody>
             <tfoot>
                 <tr>

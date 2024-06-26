@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Table, Button, Pagination } from 'react-bootstrap';
 
 interface DesenvolvedoresTableProps {
@@ -12,27 +12,12 @@ interface DesenvolvedoresTableProps {
 
 const DesenvolvedoresTable: React.FC<DesenvolvedoresTableProps> = ({ currentPage, totalPages, desenvolvedores, onEdit, onDelete, handlePageChange }) => {
 
-    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
-    const [sortedDesenvolvedores, setSortedDesenvolvedores] = useState(desenvolvedores);
-
-    const handleSort = () => {
-        const sortedDesenvolvedores = [...desenvolvedores].sort((a, b) => {
-            if (sortOrder === 'asc') {
-                return a.nome.localeCompare(b.nome);
-            } else {
-                return b.nome.localeCompare(a.nome);
-            }
-        });
-        setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-        setSortedDesenvolvedores(sortedDesenvolvedores);
-    };
-
     return (
         <Table striped bordered hover style={{ minWidth: "60vw" }} className='text-center'>
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th onClick={handleSort} style={{ cursor: 'pointer' }}>Nome - {sortOrder}</th>
+                    <th style={{ cursor: 'pointer' }}>Nome</th>
                     <th>Sexo</th>
                     <th>Data de Nascimento</th>
                     <th>Hobby</th>
@@ -40,7 +25,7 @@ const DesenvolvedoresTable: React.FC<DesenvolvedoresTableProps> = ({ currentPage
                 </tr>
             </thead>
             <tbody>
-                {sortedDesenvolvedores.map((desenvolvedor: any) => (
+                {desenvolvedores.map((desenvolvedor: any) => (
                     <tr key={desenvolvedor.id}>
                         <td>{desenvolvedor.id}</td>
                         <td>{desenvolvedor.nome}</td>

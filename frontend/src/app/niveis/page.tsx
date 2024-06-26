@@ -3,7 +3,7 @@
 import Link from 'next/link';
 
 import { useEffect, useState } from 'react';
-import { Button, Pagination, Table } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 
 import ToastMessage from '../components/ToastMessage';
 import NivelModalForm from '../components/NivelModalForm';
@@ -35,7 +35,6 @@ export default function Niveis() {
   useEffect(() => {
     fetchNiveis(currentPage);
   }, [currentPage]);
-
 
   const fetchNiveis = async (currentPage = 1, searchQuery = '') => {
     try {

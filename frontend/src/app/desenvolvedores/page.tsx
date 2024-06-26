@@ -47,7 +47,7 @@ const Desenvolvedores: React.FC = () => {
     fetchNiveis();
   }, []);
 
-  const fetchNiveis = async () => {
+  const fetchNiveis =  async () => {
     try {
       await fetch(`${apiUrlNiveis}?per_page=999`)
         .then(response => response.json())
@@ -56,7 +56,7 @@ const Desenvolvedores: React.FC = () => {
         });
     }
     catch (error: any) {
-      setToast({ show: true, variant: 'danger', message: error.message });
+      setToast({ show: true, variant: 'danger', message: error.mensagem });
     }
   };
 
@@ -66,14 +66,13 @@ const Desenvolvedores: React.FC = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Erro ao buscar desenvolvedores');
+        throw data;
       }
 
       setDesenvolvedores(data.data);
-      setCurrentPage(data.meta.current_page);
       setTotalPages(data.meta.last_page);
     } catch (error: any) {
-      setToast({ show: true, variant: 'danger', message: error.message });
+      setToast({ show: true, variant: 'danger', message: error.mensagem });
     }
   };
 
@@ -107,7 +106,7 @@ const Desenvolvedores: React.FC = () => {
 
       setToast({ show: true, variant: 'success', message: 'Desenvolvedor adicionado com sucesso' });
     } catch (error: any) {
-      setToast({ show: true, variant: 'danger', message: error.message ?? 'Erro ao adicionar desenvolvedor' });
+      setToast({ show: true, variant: 'danger', message: error.mensagem ?? 'Erro ao adicionar desenvolvedor' });
     }
   };
 
@@ -132,7 +131,7 @@ const Desenvolvedores: React.FC = () => {
       setToast({ show: true, variant: 'success', message: 'Desenvolvedor editado com sucesso' });
 
     } catch (error: any) {
-      setToast({ show: true, variant: 'danger', message: error.message ?? 'Erro ao editar desenvolvedor' });
+      setToast({ show: true, variant: 'danger', message: error.mensagem ?? 'Erro ao editar desenvolvedor' });
     }
   };
 
