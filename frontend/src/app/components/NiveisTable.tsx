@@ -24,7 +24,8 @@ const NiveisTable: React.FC<NiveisTableProps> = ({
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th >Nível</th>
+                    <th>Nível</th>
+                    <th>Desenvolvedores Vinculados</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -33,6 +34,7 @@ const NiveisTable: React.FC<NiveisTableProps> = ({
                     <tr key={nivel.id}>
                         <td style={{ width: '100px' }}>{nivel.id}</td>
                         <td>{nivel.nivel}</td>
+                        <td>{nivel.desenvolvedores_count}</td>
                         <td style={{ width: '200px' }}>
                             <Button variant="info" onClick={() => handleOpenModal(nivel.id, nivel.nivel)}>
                                 Editar
