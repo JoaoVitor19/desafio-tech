@@ -3,17 +3,18 @@ import { Button, Form, InputGroup } from 'react-bootstrap';
 
 interface SearchInputProps {
   value: string;
+  placeholder: string;
   onChange: (value: string) => void;
   onSubmit: () => void;
 }
 
-const SearchInput: React.FC<SearchInputProps> = ({ value, onChange, onSubmit }) => {
+const SearchInput: React.FC<SearchInputProps> = ({ value, placeholder, onChange, onSubmit }) => {
   return (
     <Form onSubmit={(e) => { e.preventDefault(); onSubmit(); }} className="mb-3">
       <InputGroup>
         <Form.Control
           type="text"
-          placeholder="Buscar níveis"
+          placeholder={placeholder}
           value={value}
           onChange={(e) => onChange(e.target.value)}
         />

@@ -1,18 +1,248 @@
-import Link from 'next/link';
+'use client'
 
-export default function Desenvolvedores() {
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { Button, Pagination } from 'react-bootstrap';
+import ToastMessage from '../components/ToastMessage';
+import DesenvolvedorModalForm from '../components/DesenvolvedorModalForm';
+import DesenvolvedoresTable from '../components/DesenvolvedoresTable';
+import SearchInput from '../components/SearchInput';
+
+const Desenvolvedores: React.FC = () => {
+
+  const apiUrl = "https://backend.test/desenvolvedores";
+  const apiUrlNiveis = "https://backend.test/niveis";
+
+  const [desenvolvedor, setDesenvolvedor] = useState({
+    nivel_id: '',
+    nome: '',
+    sexo: '',
+    data_nascimento: '',
+    hobby: ''
+  });
+
+  const [niveis, setNiveis] = useState([]);
+
+  const [desenvolvedores, setDesenvolvedores] = useState([]);
+  const [desenvolvedorId, setDesenvolvedorId] = useState(null);
+
+  const [showModal, setShowModal] = useState(false);
+  const [toast, setToast] = useState({ show: false, variant: '', message: '' });
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const desenvolvedoresPerPage = 5;
+
+  const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    fetchDesenvolvedores(currentPage, searchQuery);
+  }, [currentPage, searchQuery]);
+
+  useEffect(() => {
+    fetchNiveis();
+  }, []);
+
+  const fetchNiveis = async () => {
+    try {
+      await fetch(`${apiUrlNiveis}?per_page=999`)
+        .then(response => response.json())
+        .then((response: any) => {
+          setNiveis(response.data);
+        });
+    }
+    catch (error: any) {
+      setToast({ show: true, variant: 'danger', message: error.message });
+    }
+  };
+
+  const fetchDesenvolvedores = async (currentPage = 1, searchQuery = '') => {
+    try {
+      const response = await fetch(`${apiUrl}?page=${currentPage}&per_page=${desenvolvedoresPerPage}&search=${searchQuery}`);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Erro ao buscar desenvolvedores');
+      }
+
+      setDesenvolvedores(data.data);
+      setCurrentPage(data.meta.current_page);
+      setTotalPages(data.meta.last_page);
+    } catch (error: any) {
+      setToast({ show: true, variant: 'danger', message: error.message });
+    }
+  };
+
+  const addDesenvolvedor = async () => {
+    try {
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(desenvolvedor)
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw data;
+      }
+
+      fetchDesenvolvedores(currentPage);
+
+      setDesenvolvedor({
+        nivel_id: '',
+        nome: '',
+        sexo: '',
+        data_nascimento: '',
+        hobby: ''
+      });
+
+      handleCloseModal();
+
+      setToast({ show: true, variant: 'success', message: 'Desenvolvedor adicionado com sucesso' });
+    } catch (error: any) {
+      setToast({ show: true, variant: 'danger', message: error.message ?? 'Erro ao adicionar desenvolvedor' });
+    }
+  };
+
+  const editDesenvolvedor = async (id: any) => {
+    try {
+      const response = await fetch(`${apiUrl}/${id}`, {
+        method: "PUT",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(desenvolvedor)
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw data;
+      }
+
+      fetchDesenvolvedores(currentPage);
+      handleCloseModal();
+      setToast({ show: true, variant: 'success', message: 'Desenvolvedor editado com sucesso' });
+
+    } catch (error: any) {
+      setToast({ show: true, variant: 'danger', message: error.message ?? 'Erro ao editar desenvolvedor' });
+    }
+  };
+
+  const deleteDesenvolvedor = async (id: any) => {
+    try {
+      const response = await fetch(`${apiUrl}/${id}`, {
+        method: "DELETE",
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      if (!response.ok) {
+        throw await response.json();
+      }
+
+      if (response.status === 404) {
+        throw { message: "Desenvolvedor não encontrado" };
+      }
+
+      fetchDesenvolvedores(currentPage);
+      setToast({ show: true, variant: 'success', message: 'Desenvolvedor deletado com sucesso' });
+    } catch (error: any) {
+      setToast({ show: true, variant: 'danger', message: error.message ?? 'Erro ao deletar desenvolvedor' });
+    }
+  };
+
+  const handleOpenModal = (id: any, desenvolvedor: any) => {
+    setDesenvolvedorId(id);
+    setDesenvolvedor(desenvolvedor);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setDesenvolvedorId(null);
+    setDesenvolvedor({
+      nivel_id: '',
+      nome: '',
+      sexo: '',
+      data_nascimento: '',
+      hobby: ''
+    });
+  };
+
+  const handleCloseToast = () => {
+    setToast({ show: false, variant: '', message: '' });
+  };
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center">
-      <h1 className="text-4xl font-bold mb-8">Página de Desenvolvedores</h1>
-      {/* Tabela de desenvolvedores */}
-      <div className="max-w-3xl mx-auto bg-white shadow-md rounded-lg overflow-hidden">
-        {/* Conteúdo da tabela aqui */}
+    <div className="d-flex w-100 justify-content-center flex-column align-items-center" style={{ height: "100vh", gap: "10px" }}>
+      <h1 className="mt-2 mb-2">Página de Desenvolvedores</h1>
+
+      <Link href="/" className="mb-3 mt-3">
+        Voltar para Página Inicial
+      </Link>
+
+      <div className='d-flex justify-content-between' style={{ gap: "20px", minWidth: "60vw" }}>
+        <SearchInput
+          placeholder='Buscar Desenvolvedores'
+          value={searchQuery}
+          onChange={setSearchQuery}
+          onSubmit={() => fetchDesenvolvedores(1, searchQuery)}
+        />
+
+        <Button variant="primary" className="mb-3" onClick={() => setShowModal(true)}>
+          Adicionar Desenvolvedor
+        </Button>
       </div>
-      <div className="mt-8">
-        <Link href="/" className='bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-md shadow-md transition duration-300 ease-in-out'>
-            Voltar para Página Inicial
-        </Link>
+
+      <div>
+        <DesenvolvedoresTable
+          desenvolvedores={desenvolvedores}
+          onEdit={handleOpenModal}
+          onDelete={deleteDesenvolvedor}
+        />
+
+        <div className='d-flex justify-content-center'>
+          <Pagination style={{ margin: 0 }}>
+            {Array.from({ length: totalPages }, (_, i) => (
+              <Pagination.Item
+                key={i + 1}
+                active={i + 1 === currentPage}
+                onClick={() => handlePageChange(i + 1)}
+              >
+                {i + 1}
+              </Pagination.Item>
+            ))}
+          </Pagination>
+        </div>
+
+        <ToastMessage
+          show={toast.show}
+          onClose={handleCloseToast}
+          variant={toast.variant}
+          message={toast.message}
+        />
+
+        <DesenvolvedorModalForm
+          show={showModal}
+          onHide={handleCloseModal}
+          editId={desenvolvedorId}
+          desenvolvedor={desenvolvedor}
+          onSave={desenvolvedorId ? editDesenvolvedor : addDesenvolvedor}
+          setDesenvolvedor={setDesenvolvedor}
+          niveis={niveis}
+        />
       </div>
     </div>
   );
-}
+};
+
+export default Desenvolvedores;
