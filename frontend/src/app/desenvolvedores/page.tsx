@@ -11,10 +11,6 @@ import ConfirmationModal from '../components/ConfirmationModal';
 
 const Desenvolvedores: React.FC = () => {
 
-  const envUrl = process.env.API_URL;
-  const apiUrl = `${envUrl}/desenvolvedores`;
-  const apiUrlNiveis = `${envUrl}/niveis`;
-
   const [desenvolvedor, setDesenvolvedor] = useState({
     nivel_id: '',
     nome: '',
@@ -41,6 +37,7 @@ const Desenvolvedores: React.FC = () => {
   const [desenvolvedorToDelete, setDesenvolvedorToDelete] = useState<number | null>(null);
 
   useEffect(() => {
+    console.log('Backend URL:', process.env.BACKEND_URL);
     fetchDesenvolvedores(currentPage);
   }, [currentPage]);
 
@@ -50,7 +47,7 @@ const Desenvolvedores: React.FC = () => {
 
   const fetchNiveis = async () => {
     try {
-      await fetch(`${apiUrlNiveis}?per_page=999`)
+      await fetch(`http://localhost:8000/niveis?per_page=999`)
         .then(response => response.json())
         .then((response: any) => {
           setNiveis(response.data);
@@ -63,7 +60,7 @@ const Desenvolvedores: React.FC = () => {
 
   const fetchDesenvolvedores = async (currentPage = 1, searchQuery = '') => {
     try {
-      const response = await fetch(`${apiUrl}?page=${currentPage}&per_page=${desenvolvedoresPerPage}&search=${searchQuery}`);
+      const response = await fetch(`http://localhost:8000/desenvolvedores?page=${currentPage}&per_page=${desenvolvedoresPerPage}&search=${searchQuery}`);
       const data = await response.json();
 
       if (!response.ok) {
@@ -79,7 +76,7 @@ const Desenvolvedores: React.FC = () => {
 
   const addDesenvolvedor = async () => {
     try {
-      const response = await fetch(apiUrl, {
+      const response = await fetch("http://localhost:8000/desenvolvedores", {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
@@ -113,7 +110,7 @@ const Desenvolvedores: React.FC = () => {
 
   const editDesenvolvedor = async (id: any) => {
     try {
-      const response = await fetch(`${apiUrl}/${id}`, {
+      const response = await fetch(`http://localhost:8000/desenvolvedores/${id}`, {
         method: "PUT",
         headers: {
           'Content-Type': 'application/json',
@@ -138,7 +135,7 @@ const Desenvolvedores: React.FC = () => {
 
   const deleteDesenvolvedor = async (id: any) => {
     try {
-      const response = await fetch(`${apiUrl}/${id}`, {
+      const response = await fetch(`http://localhost:8000/desenvolvedores/${id}`, {
         method: "DELETE",
         headers: {
           'Content-Type': 'application/json',

@@ -13,8 +13,7 @@ import ConfirmationModal from '../components/ConfirmationModal';
 
 export default function Niveis() {
 
-  const envUrl = process.env.API_URL;
-  const apiUrl = `${envUrl}/niveis`;
+  const apiUrl = `http://localhost:8000/niveis`;
 
   const [nivel, setNivel] = useState('');
   const [niveis, setNiveis] = useState([]);
@@ -39,7 +38,7 @@ export default function Niveis() {
 
   const fetchNiveis = async (currentPage = 1, searchQuery = '') => {
     try {
-      await fetch(`${apiUrl}?page=${currentPage}&per_page=${niveisPerPage}&search=${searchQuery}`)
+      await fetch(`http://localhost:8000/niveis?page=${currentPage}&per_page=${niveisPerPage}&search=${searchQuery}`)
         .then(response => response.json())
         .then((response: any) => {
           setNiveis(response.data);
@@ -81,7 +80,7 @@ export default function Niveis() {
   const editNivel = async (id: any) => {
     try {
 
-      const response = await fetch(`${apiUrl}/${id}`, {
+      const response = await fetch(`http://localhost:8000/niveis/${id}`, {
         method: "PUT",
         headers: {
           'Content-Type': 'application/json',
@@ -107,7 +106,7 @@ export default function Niveis() {
   const deleteNivel = async (id: any) => {
     try {
 
-      const response = await fetch(`${apiUrl}/${id}`, {
+      const response = await fetch(`http://localhost:8000/niveis/${id}`, {
         method: "DELETE",
         headers: {
           'Content-Type': 'application/json',

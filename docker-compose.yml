@@ -1,31 +1,36 @@
-version: '3'
+version: "3.8"
 
 services:
   backend:
-    build:
-      context: ./backend
+    build: ./backend
     ports:
       - "8000:8000"
+    volumes:
+      - ./backend:/app
     environment:
       - DB_CONNECTION=mysql
       - DB_HOST=db
       - DB_PORT=3306
-      - DB_DATABASE=laravel
-      - DB_USERNAME=root
-      - DB_PASSWORD=example
-      
+      - DB_DATABASE=mydb
+      - DB_USERNAME=dbuser
+      - DB_PASSWORD=dbpass
+    depends_on:
+      - db
+    command: /bin/sh -c "until nc -z db 3306; do echo 'Aguardando pelo MySQL...'; sleep 10; done && php artisan migrate && php artisan serve --host=0.0.0.0 --port=8000"
+
   frontend:
-    build:
-      context: ./frontend
+    build: ./frontend
     ports:
       - "3000:3000"
-    environment:
-      - API_URL=http://backend:8000/api
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - backend
 
   db:
-    image: mysql:5.7
+    image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: example
-      MYSQL_DATABASE: laravel
-    ports:
-      - "3306:3306"
+      MYSQL_ROOT_PASSWORD: dbpass
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: dbuser
+      MYSQL_PASSWORD: dbpass
