@@ -23,4 +23,4 @@ RUN apt-get install -y netcat
 RUN composer install
 
 # Expondo a porta 8000 (se necessário)
-EXPOSE 8000
+EXPOSE 5000
