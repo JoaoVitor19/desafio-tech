@@ -38,7 +38,7 @@ export default function Niveis() {
 
   const fetchNiveis = async (currentPage = 1, searchQuery = '') => {
     try {
-      await fetch(`${apiUrl}/niveis?page=${currentPage}&per_page=${niveisPerPage}&search=${searchQuery}`)
+      await fetch(`${apiUrl}?page=${currentPage}&per_page=${niveisPerPage}&search=${searchQuery}`)
         .then(response => response.json())
         .then((response: any) => {
           setNiveis(response.data);
@@ -80,7 +80,7 @@ export default function Niveis() {
   const editNivel = async (id: any) => {
     try {
 
-      const response = await fetch(`${apiUrl}/niveis/${id}`, {
+      const response = await fetch(`${apiUrl}/${id}`, {
         method: "PUT",
         headers: {
           'Content-Type': 'application/json',
@@ -106,7 +106,7 @@ export default function Niveis() {
   const deleteNivel = async (id: any) => {
     try {
 
-      const response = await fetch(`${apiUrl}/niveis/${id}`, {
+      const response = await fetch(`${apiUrl}/${id}`, {
         method: "DELETE",
         headers: {
           'Content-Type': 'application/json',
@@ -162,7 +162,7 @@ export default function Niveis() {
   };
 
   return (
-    <div className="d-flex w-100 justify-content-center flex-column align-items-center" style={{ height: "100vh", gap: "10px" }}>
+    <div className="d-flex w-100 justify-content-center flex-column align-items-center p-3" style={{ height: "100vh", gap: "10px" }}>
 
       <h1 className="mt-2 mb-2">Página de Níveis</h1>
 

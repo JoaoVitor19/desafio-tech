@@ -34,7 +34,7 @@ const NiveisTable: React.FC<NiveisTableProps> = ({
                     <tr key={nivel.id}>
                         <td style={{ width: '100px' }}>{nivel.id}</td>
                         <td>{nivel.nivel}</td>
-                        <td>{nivel.desenvolvedores_count}</td>
+                        <td style={{maxWidth: "50px"}}>{nivel.desenvolvedores_count}</td>
                         <td style={{ width: '200px' }}>
                             <Button variant="info" onClick={() => handleOpenModal(nivel.id, nivel.nivel)}>
                                 Editar
@@ -48,7 +48,7 @@ const NiveisTable: React.FC<NiveisTableProps> = ({
             </tbody>
             <tfoot>
                 <tr>
-                    <td colSpan={3}>
+                    <td colSpan={4}>
                         <div className='d-flex justify-content-center'>
                             <Pagination style={{ margin: 0 }}>
                                 {Array.from({ length: totalPages }, (_, i) => (

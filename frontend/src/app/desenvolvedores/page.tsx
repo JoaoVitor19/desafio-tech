@@ -196,7 +196,7 @@ const Desenvolvedores: React.FC = () => {
   };
 
   return (
-    <div className="d-flex w-100 justify-content-center flex-column align-items-center" style={{ height: "100vh", gap: "10px" }}>
+    <div className="d-flex w-100 justify-content-center flex-column align-items-center p-3" style={{ height: "100vh", gap: "10px" }}>
       <h1 className="mt-2 mb-2">Página de Desenvolvedores</h1>
 
       <Link href="/" className="mb-3 mt-3">
@@ -250,6 +250,7 @@ const Desenvolvedores: React.FC = () => {
         onConfirm={confirmDelete}
         message="Você tem certeza que deseja deletar este Desenvolvedor?"
       />
+
     </div>
   );
 };
