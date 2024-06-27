@@ -22,5 +22,9 @@ RUN apt-get install -y netcat
 # Instalação das dependências do Composer
 RUN composer install
 
+<<<<<<< Updated upstream
 # Expondo a porta 8000 (se necessário)
 EXPOSE 8000
+=======
+CMD php artisan serve --host=0.0.0.0 --port=80
+>>>>>>> Stashed changes
