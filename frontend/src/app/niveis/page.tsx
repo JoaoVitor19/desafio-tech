@@ -38,7 +38,7 @@ export default function Niveis() {
 
   const fetchNiveis = async (currentPage = 1, searchQuery = '') => {
     try {
-      await fetch(`http://localhost:8000/niveis?page=${currentPage}&per_page=${niveisPerPage}&search=${searchQuery}`)
+      await fetch(`${apiUrl}/niveis?page=${currentPage}&per_page=${niveisPerPage}&search=${searchQuery}`)
         .then(response => response.json())
         .then((response: any) => {
           setNiveis(response.data);
@@ -80,7 +80,7 @@ export default function Niveis() {
   const editNivel = async (id: any) => {
     try {
 
-      const response = await fetch(`http://localhost:8000/niveis/${id}`, {
+      const response = await fetch(`${apiUrl}/niveis/${id}`, {
         method: "PUT",
         headers: {
           'Content-Type': 'application/json',
@@ -106,7 +106,7 @@ export default function Niveis() {
   const deleteNivel = async (id: any) => {
     try {
 
-      const response = await fetch(`http://localhost:8000/niveis/${id}`, {
+      const response = await fetch(`${apiUrl}/niveis/${id}`, {
         method: "DELETE",
         headers: {
           'Content-Type': 'application/json',
