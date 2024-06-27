@@ -13,7 +13,7 @@ import ConfirmationModal from '../components/ConfirmationModal';
 
 export default function Niveis() {
 
-  const apiUrl = `http://localhost:8000/niveis`;
+  const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/niveis`;
 
   const [nivel, setNivel] = useState('');
   const [niveis, setNiveis] = useState([]);
@@ -193,7 +193,7 @@ export default function Niveis() {
 
       <ToastMessage show={toast.show} onClose={handleCloseToast} variant={toast.variant} message={toast.message} />
       <NivelModalForm show={showModal} onHide={handleCloseModal} editId={nivelId} nivel={nivel} onSave={nivelId ? editNivel : addNivel} setNivel={setNivel} />
-      
+
       <ConfirmationModal
         show={showConfirmModal}
         onHide={() => setShowConfirmModal(false)}

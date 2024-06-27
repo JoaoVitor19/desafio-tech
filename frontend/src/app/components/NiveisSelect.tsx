@@ -22,6 +22,7 @@ const NiveisSelect: React.FC<NiveisSelectProps> = ({ niveis, nivelId, onChange }
         <Form.Group className="mb-3" controlId="formNivel">
             <Form.Label>Nível</Form.Label>
             <Form.Control as="select" value={nivelId ?? ''} onChange={handleChange}>
+                <option value=''>Selecione um nível</option>
                 {niveis.map((nivel) => (
                     <option key={nivel.id} value={nivel.id}>{nivel.nivel}</option>
                 ))}

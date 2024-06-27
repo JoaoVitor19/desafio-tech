@@ -48,10 +48,10 @@ const DesenvolvedorModalForm = ({ show, onHide, editId, desenvolvedor, onSave, s
               value={desenvolvedor.sexo}
               onChange={(e) => setDesenvolvedor({ ...desenvolvedor, sexo: e.target.value })}
             >
+              <option value="">Selecione uma opção</option>
               <option value="Masculino">Masculino</option>
               <option value="Feminino">Feminino</option>
               <option value="Outro">Outro</option>
-
             </Form.Control>
           </Form.Group>
           <Form.Group className="mb-3" controlId="formDataNascimento">
