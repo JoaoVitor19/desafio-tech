@@ -27,7 +27,7 @@ Toda a aplicação é containerizada utilizando Docker.
 
 ## Acesso ao Site Online
 O projeto também está disponível online no seguinte endereço:
-https://desafio-tech-chi.vercel.app/
+https://desafio-tech-git-frontend-joaovitor19s-projects.vercel.app
 
 ## Funcionalidades Implementadas
 - CRUD de desenvolvedores e níveis
