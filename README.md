@@ -27,7 +27,7 @@ Toda a aplicação é containerizada utilizando Docker.
 
 ## Acesso ao Site Online
 O projeto também está disponível online no seguinte endereço:
-[URL_DO_SITE_ONLINE]
+https://desafio-tech-chi.vercel.app/
 
 ## Funcionalidades Implementadas
 - CRUD de desenvolvedores e níveis
